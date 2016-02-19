@@ -52,7 +52,7 @@ func main() {
 ![(cc) Peter Harrison](examples/result.jpg "(cc) Peter Harrison")
 
 ## Documentation
-See [Godoc](godoc.org/github.com/juankklzone/img)
+See [Godoc](https://godoc.org/github.com/juankklzone/img)
 
 ## License
 This project is licenced under the [GPLv3 License](LICENSE)
