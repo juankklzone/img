@@ -10,7 +10,7 @@ Assuming you have a go installation up and running:
 
 ## Quickstart
 
-```
+```go
 package main
 
 import (
