@@ -55,4 +55,4 @@ func main() {
 See [Godoc](godoc.org/github.com/juankklzone/img)
 
 ## License
-This project is licenced under the GPLv3 License
+This project is licenced under the [GPLv3 License](LICENSE)
