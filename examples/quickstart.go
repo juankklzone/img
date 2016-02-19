@@ -2,8 +2,9 @@ package main
 
 import (
 	"image/jpeg"
-	"img"
 	"os"
+
+	"github.com/juankklzone/img"
 )
 
 func main() {

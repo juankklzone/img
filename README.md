@@ -15,7 +15,7 @@ package main
 
 import (
     "image/jpeg"
-    "img"
+    "github.com/juankklzone/img"
     "os"
 )
 
