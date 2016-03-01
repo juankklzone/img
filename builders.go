@@ -56,3 +56,16 @@ func NewGrayImage(img image.Image) GrayImage {
 	}
 	return ci
 }
+
+//Clone returns a new instance of the image itself.
+func (gi GrayImage) Clone() (i GrayImage) {
+	x, y := gi.Bounds().Max.X, gi.Bounds().Max.Y
+	i = make(GrayImage, x)
+	for ix := range gi {
+		i[ix] = make([]color.Gray, y)
+		for iy := range gi[ix] {
+			i[ix][iy].Y = gi[ix][iy].Y
+		}
+	}
+	return i
+}

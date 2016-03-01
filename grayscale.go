@@ -24,6 +24,16 @@ func (gi GrayImage) At(x, y int) color.Color {
 	return color.RGBA{uint8(r), uint8(g), uint8(b), uint8(a)}
 }
 
+//SetGray is a convenience method to avoid Color wrapping
+func (gi GrayImage) SetGray(x, y int, gray uint8) {
+	gi[x][y].Y = gray
+}
+
+//AtGray is a convenience method to avoid Color wrapping
+func (gi GrayImage) AtGray(x, y int) uint8 {
+	return gi[x][y].Y
+}
+
 //Set a color into the position [x][y]
 func (gi GrayImage) Set(x, y int, c color.Color) {
 	r, g, b, _ := gi[x][y].RGBA()
