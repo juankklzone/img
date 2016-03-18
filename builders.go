@@ -30,6 +30,7 @@ func NewEmptyImage(borders image.Rectangle) ColorImage {
 	return ci
 }
 
+//NewEmptyGrayImage creates an grayscale image with a size equals to the recieved Rectangle
 func NewEmptyGrayImage(borders image.Rectangle) GrayImage {
 	x, y := borders.Max.X, borders.Max.Y
 	gi := make(GrayImage, x)
@@ -57,15 +58,19 @@ func NewGrayImage(img image.Image) GrayImage {
 	return ci
 }
 
-//Clone returns a new instance of the image itself.
-func (gi GrayImage) Clone() (i GrayImage) {
-	x, y := gi.Bounds().Max.X, gi.Bounds().Max.Y
-	i = make(GrayImage, x)
-	for ix := range gi {
-		i[ix] = make([]color.Gray, y)
-		for iy := range gi[ix] {
-			i[ix][iy].Y = gi[ix][iy].Y
+//NewBinaryImage returns a BinaryImage with img's size
+//if the color is greater than div, it's set up to true
+func NewBinaryImage(img GrayImage, div uint8) BinaryImage {
+	borders := img.Bounds()
+	maxX, maxY := borders.Max.X, borders.Max.Y
+	bi := make([][]bool, maxX)
+	for x := range bi {
+		bi[x] = make([]bool, maxY)
+		for y := range bi[x] {
+			if img.AtGray(x, y) > div {
+				bi[x][y] = true
+			}
 		}
 	}
-	return i
+	return bi
 }

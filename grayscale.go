@@ -39,3 +39,16 @@ func (gi GrayImage) Set(x, y int, c color.Color) {
 	r, g, b, _ := gi[x][y].RGBA()
 	gi[x][y] = color.Gray{uint8((r + g + b) / 3)}
 }
+
+//Clone returns a new instance of the gray image itself.
+func (gi GrayImage) Clone() (i GrayImage) {
+	x, y := gi.Bounds().Max.X, gi.Bounds().Max.Y
+	i = make(GrayImage, x)
+	for ix := range gi {
+		i[ix] = make([]color.Gray, y)
+		for iy := range gi[ix] {
+			i[ix][iy].Y = gi[ix][iy].Y
+		}
+	}
+	return i
+}
