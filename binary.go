@@ -1,4 +1,4 @@
-package main
+package img
 
 import (
 	"image"
@@ -44,12 +44,12 @@ func (bi BinaryImage) SetBinary(x, y int, color bool) {
 //Clone returns a new instance of the binary image itself
 func (bi BinaryImage) Clone() (clone BinaryImage) {
 	x, y := bi.Bounds().Max.X, bi.Bounds().Max.Y
-	clone = make(Binary, x)
+	clone = make(BinaryImage, x)
 	for ix := range bi {
 		clone[ix] = make([]bool, y)
 		for iy := range bi[ix] {
-			clone[ix][iy].Y = bi[ix][iy].Y
+			clone[ix][iy] = bi[ix][iy]
 		}
 	}
-	return i
+	return
 }
