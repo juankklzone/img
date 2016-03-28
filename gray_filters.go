@@ -31,8 +31,18 @@ type FilterOptions struct {
 	Exponent   int
 }
 
+func defaultFilterOptions() *FilterOptions {
+	fo := new(FilterOptions)
+	fo.Percentage = .10
+	fo.Exponent = 2
+	return fo
+}
+
 //Filter applies a filter to an image, with the options received
 func (gi GrayImage) Filter(ft FilterType, fo *FilterOptions) (i GrayImage) {
+	if fo == nil {
+		fo = defaultFilterOptions()
+	}
 	switch ft {
 	case SaltAndPepper:
 		i = gi.Clone()
