@@ -1,5 +1,6 @@
 # Img
-Package img provides basic image manipulation for RGBA and Grayscale images in Golang.
+Package img provides basic image manipulation for RGBA and Grayscale images in Golang.  
+![Travis](https://travis-ci.org/juankklzone/img.svg?branch=master)  ![Go Report Card](https://goreportcard.com/badge/github.com/juankklzone/img)
 
 ![Gophers](examples/gophers.jpg)
 
