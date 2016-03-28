@@ -2,10 +2,10 @@ package img
 
 import "image"
 
-//Histogram represents the ocurrence of a level of color into an image.
+//Histogram represents the occurrence of a level of color into an image.
 type Histogram map[uint8]int
 
-//GetHistogram creates an histogram per channel, which counts the ocurrences of a color
+//GetHistogram creates an histogram per channel, which counts the occurrences of a color
 func GetHistogram(img image.Image) (h []Histogram) {
 	h = make([]Histogram, 4)
 	h[0], h[1], h[2], h[3] = make(Histogram), make(Histogram), make(Histogram), make(Histogram)

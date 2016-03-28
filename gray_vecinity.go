@@ -22,6 +22,5 @@ func (gi GrayImage) getVecinity(x, y int) []uint8 {
 			vecinity = append(vecinity, gi.AtGray(x, y))
 		}
 	}
-    positions = nil
 	return vecinity
 }
