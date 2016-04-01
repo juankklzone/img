@@ -1,8 +1,6 @@
 package img
 
-import (
-	"image"
-)
+import "image"
 
 func (gi GrayImage) getVecinity(x, y int) []uint8 {
 	var vecinity []uint8
@@ -19,7 +17,7 @@ func (gi GrayImage) getVecinity(x, y int) []uint8 {
 	sz := gi.Bounds().Max
 	for _, pos := range positions {
 		if pos.X < sz.X && pos.Y < sz.Y && pos.X >= 0 && pos.Y >= 0 {
-			vecinity = append(vecinity, gi.AtGray(x, y))
+			vecinity = append(vecinity, gi.AtGray(pos.X, pos.Y))
 		}
 	}
 	return vecinity
