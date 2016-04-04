@@ -8,7 +8,7 @@ func NewScanner() *Scanner {
 	return &Scanner{set: make(objectSet)}
 }
 
-func (s *Scanner) SearchObjects(bi BinaryImage) {
+func (s *Scanner) SearchObjects(bi BinaryImage) int {
 	rows := bi.Bounds().Max.X
 	for i := 0; i < rows; i++ {
 		lastRow := s.set.objectsInLastRow(i)
@@ -26,7 +26,7 @@ func (s *Scanner) SearchObjects(bi BinaryImage) {
 				}
 				lenParents := len(belongsTo)
 				if lenParents == 0 {
-					lastRow.add(currentObject)
+					s.set.add(currentObject)
 				} else {
 					initial := belongsTo[0]
 					for i := 1; i < lenParents; i++ {
@@ -37,9 +37,9 @@ func (s *Scanner) SearchObjects(bi BinaryImage) {
 					lastRow.drop(belongsTo[1:]...)
 				}
 			}
-			s.set.update(lastRow)
 		}
 	}
+	return len(s.set)
 }
 
 func (s *Scanner) scanRow(bi BinaryImage, row int) objectSet {
@@ -64,4 +64,8 @@ func (s *Scanner) scanRow(bi BinaryImage, row int) objectSet {
 		os[id] = currentObj
 	}
 	return os
+}
+
+func (s *Scanner) Filter(minSz int) int {
+	return len(s.set.filter(minSz))
 }

@@ -1,5 +1,10 @@
 package img
 
+import (
+	"bytes"
+	"fmt"
+)
+
 //objectSet is the list of objects inside an image map[idObj]obj
 type objectSet map[int]*object
 
@@ -17,6 +22,9 @@ func (os objectSet) objectsInLastRow(row int) (o objectSet) {
 
 func (os objectSet) add(toAdd *object) {
 	id := len(os)
+	for os[id] != nil {
+		id += 2
+	}
 	toAdd.id = id
 	os[id] = toAdd
 }
@@ -28,11 +36,8 @@ func (os objectSet) drop(toDrop ...int) {
 }
 
 func (os objectSet) append(toAppend objectSet) {
-	newID := len(os)
 	for _, obj := range toAppend {
-		obj.id = newID
-		os[newID] = obj
-		newID++
+		os.add(obj)
 	}
 }
 
@@ -48,4 +53,23 @@ func (os objectSet) groupObjects(dest int, toBeAppened *object) {
 		original.points[row] = append(original.points[row], points...)
 	}
 	os[original.id] = original
+}
+
+func (os objectSet) String() string {
+	buf := new(bytes.Buffer)
+	for id, obj := range os {
+		fmt.Fprintf(buf, "\nObj ID: %d => ", id)
+		fmt.Fprintf(buf, "%s \n\n", obj.String())
+	}
+	return buf.String()
+}
+
+func (os objectSet) filter(minSize int) (s objectSet) {
+	s = make(objectSet)
+	for id, obj := range os {
+		if obj.len() >= minSize {
+			s[id] = obj
+		}
+	}
+	return
 }

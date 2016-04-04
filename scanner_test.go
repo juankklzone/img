@@ -20,17 +20,18 @@ func TestScannerInRow(t *testing.T) {
 }
 
 func TestScannerInMultiplelines(t *testing.T) {
-	data := [][]bool{{true, false, false, false, true},
-		{false, true, false, true}}
+	data := [][]bool{
+		{true, false, true, false, true},
+		{false, true, false, true, false},
+		{true, false, false, false, true},
+		{true, true, false, false, false},
+		{false, false, false, false, true},
+		{true, true, true, false, false},
+		{false, false, false, false, false},
+		{false, false, true, false, true},
+	}
 	bi := BinaryImage(data)
 	s := NewScanner()
 	s.SearchObjects(bi)
-	for id, obj := range s.set {
-		t.Log(id)
-		for _, row := range obj.points {
-			for _, point := range row {
-				t.Log(point)
-			}
-		}
-	}
+	t.Log(s.set)
 }
