@@ -3,6 +3,7 @@ package img
 import (
 	"bytes"
 	"fmt"
+	"image/draw"
 )
 
 //objectSet is the list of objects inside an image map[idObj]obj
@@ -72,4 +73,13 @@ func (os objectSet) filter(minSize int) (s objectSet) {
 		}
 	}
 	return
+}
+
+func (os objectSet) draw(img draw.Image) {
+	colors := randColors(len(os))
+	idx := 0
+	for _, o := range os {
+		o.draw(img, colors[idx])
+		idx++
+	}
 }

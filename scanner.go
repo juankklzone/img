@@ -2,17 +2,18 @@ package img
 
 type Scanner struct {
 	set objectSet
+	bi  BinaryImage
 }
 
-func NewScanner() *Scanner {
-	return &Scanner{set: make(objectSet)}
+func NewScanner(i BinaryImage) *Scanner {
+	return &Scanner{set: make(objectSet), bi: i}
 }
 
-func (s *Scanner) SearchObjects(bi BinaryImage) int {
-	rows := bi.Bounds().Max.X
+func (s *Scanner) SearchObjects() int {
+	rows := s.bi.Bounds().Max.X
 	for i := 0; i < rows; i++ {
 		lastRow := s.set.objectsInLastRow(i)
-		currentRowObjects := s.scanRow(bi, i)
+		currentRowObjects := s.scanRow(i)
 		if len(lastRow) == 0 {
 			s.set.append(currentRowObjects)
 		} else {
@@ -42,13 +43,13 @@ func (s *Scanner) SearchObjects(bi BinaryImage) int {
 	return len(s.set)
 }
 
-func (s *Scanner) scanRow(bi BinaryImage, row int) objectSet {
+func (s *Scanner) scanRow(row int) objectSet {
 	os := make(objectSet)
 	currentObj := newObject()
 	objInProgress := false
 	id := 0
-	for y := range bi[row] {
-		if bi[row][y] {
+	for y := range s.bi[row] {
+		if s.bi[row][y] {
 			currentObj.append(row, y)
 			objInProgress = true
 		} else if objInProgress {
@@ -67,5 +68,12 @@ func (s *Scanner) scanRow(bi BinaryImage, row int) objectSet {
 }
 
 func (s *Scanner) Filter(minSz int) int {
-	return len(s.set.filter(minSz))
+	s.set = s.set.filter(minSz)
+	return len(s.set)
+}
+
+func (s *Scanner) DrawObjects() (ci ColorImage) {
+	ci = NewColorFromImage(s.bi.Bounds())
+	s.set.draw(ci)
+	return
 }

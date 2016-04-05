@@ -6,12 +6,12 @@ import (
 )
 
 func TestScannerInRow(t *testing.T) {
-	s := NewScanner()
 	x, y := 3, 7
 	gi := NewEmptyGrayImage(image.Rect(0, 0, x, y))
 	bi := NewBinaryImage(gi, 124)
 	bi[0] = []bool{true, true, false, true, true, false, true}
-	os := s.scanRow(bi, 0)
+	s := NewScanner(bi)
+	os := s.scanRow(0)
 	if len(os) != 3 {
 		t.Log("Objects in row 0: \n", os)
 		t.FailNow()
@@ -31,7 +31,7 @@ func TestScannerInMultiplelines(t *testing.T) {
 		{false, false, true, false, true},
 	}
 	bi := BinaryImage(data)
-	s := NewScanner()
-	s.SearchObjects(bi)
+	s := NewScanner(bi)
+	s.SearchObjects()
 	t.Log(s.set)
 }

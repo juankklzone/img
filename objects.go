@@ -3,6 +3,8 @@ package img
 import (
 	"bytes"
 	"fmt"
+	"image/color"
+	"image/draw"
 )
 
 //object identifies a set of positions into the image that together create an image. map[row]points
@@ -66,4 +68,12 @@ func (o *object) len() int {
 		count += len(rowpoints)
 	}
 	return count
+}
+
+func (o *object) draw(img draw.Image, color color.Color) {
+	for row, points := range o.points {
+		for _, y := range points {
+			img.Set(row, y, color)
+		}
+	}
 }

@@ -53,3 +53,11 @@ func (bi BinaryImage) Clone() (clone BinaryImage) {
 	}
 	return
 }
+
+func (bi BinaryImage) Invert() {
+	for x := range bi {
+		for y := range bi[x] {
+			bi[x][y] = !bi[x][y]
+		}
+	}
+}
