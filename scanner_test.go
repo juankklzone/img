@@ -12,7 +12,7 @@ func TestScannerInRow(t *testing.T) {
 	bi[0] = []bool{true, true, false, true, true, false, true}
 	s := NewScanner(bi)
 	os := s.scanRow(0)
-	if len(os) != 3 {
+	if len(os.objs) != 3 {
 		t.Log("Objects in row 0: \n", os)
 		t.FailNow()
 	}

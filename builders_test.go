@@ -3,19 +3,9 @@ package img
 import (
 	"image"
 	"image/color"
-	"math/rand"
 	"reflect"
 	"testing"
-	"time"
 )
-
-var (
-	randGen *rand.Rand
-)
-
-func init() {
-	randGen = rand.New(rand.NewSource(time.Now().UnixNano()))
-}
 
 func TestCloneGrayImg(t *testing.T) {
 	r := image.Rect(0, 0, 50, 50)
