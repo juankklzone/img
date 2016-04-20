@@ -1,25 +1,37 @@
 package img
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+	"time"
+)
 
+//Scanner finds objects in a binary image.
 type Scanner struct {
 	set *objectSet
 	bi  BinaryImage
 }
 
+//NewScanner creates a scanner
 func NewScanner(i BinaryImage) *Scanner {
 	return &Scanner{set: newObjectset(), bi: i}
 }
 
+//SearchObjects count the objects found in the image
+//and save them for later use
 func (s *Scanner) SearchObjects() int {
 	rows := s.bi.Bounds().Max.X
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 	half := rows / 2
+	ini := time.Now()
 	go s.scanRows(wg, 0, half)
 	go s.scanRows(wg, half, rows)
 	wg.Wait()
+	now := time.Now()
 	s.joinSegments(half)
+	fmt.Println("time req for joinSegments ", time.Since(now))
+	fmt.Println("total time ", time.Since(ini))
 	return len(s.set.objs)
 }
 
@@ -103,11 +115,13 @@ func (s *Scanner) scanRow(row int) *objectSet {
 	return os
 }
 
+//Filter discarts from the object set, those which size is less than minSz
 func (s *Scanner) Filter(minSz int) int {
 	s.set = s.set.filter(minSz)
 	return len(s.set.objs)
 }
 
+//DrawObjects draw each object found in a random color inside ci
 func (s *Scanner) DrawObjects() (ci ColorImage) {
 	ci = NewColorFromImage(s.bi.Bounds())
 	s.set.draw(ci)

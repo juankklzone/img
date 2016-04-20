@@ -27,38 +27,40 @@ func (o *object) append(row, y int) {
 
 func (o *object) maxInRow(row int) (y int) {
 	o.mtx.RLock()
-	defer o.mtx.RUnlock()
 	idx := len(o.points[row])
 	if idx > 0 {
 		y = o.points[row][idx-1]
 	} else {
 		y = -1
 	}
+	o.mtx.RUnlock()
 	return
 }
 
 func (o *object) minInRow(row int) (y int) {
 	o.mtx.RLock()
-	defer o.mtx.RUnlock()
 	if o.points[row] != nil {
 		y = o.points[row][0]
 	} else {
 		y = -1
 	}
+	o.mtx.RUnlock()
 	return
 }
 
 func (o *object) hasPointsInRow(row, minY, maxY int) bool {
 	o.mtx.RLock()
-	defer o.mtx.RUnlock()
+	//defer, i thought you were my friend
 	if points := o.points[row]; points != nil {
 		minReachable, maxReachable := minY-2, maxY+2
 		for _, p := range points {
 			if p > minReachable && p < maxReachable {
+				o.mtx.RUnlock()
 				return true
 			}
 		}
 	}
+	o.mtx.RUnlock()
 	return false
 }
 
@@ -76,11 +78,11 @@ func (o *object) String() string {
 
 func (o *object) len() int {
 	o.mtx.RLock()
-	defer o.mtx.RUnlock()
 	count := 0
 	for _, rowpoints := range o.points {
 		count += len(rowpoints)
 	}
+	o.mtx.RUnlock()
 	return count
 }
 
@@ -96,14 +98,15 @@ func (o *object) draw(img draw.Image, color color.Color) {
 
 func (o *object) get(i int) []int {
 	o.mtx.RLock()
-	defer o.mtx.RUnlock()
-	return o.points[i]
+	data := o.points[i]
+	o.mtx.RUnlock()
+	return data
 }
 
 func (o *object) set(i int, d []int) {
 	o.mtx.Lock()
-	defer o.mtx.Unlock()
 	o.points[i] = d
+	o.mtx.Unlock()
 }
 
 func (o *object) isAdjacent(o2 *object, row int) bool {
