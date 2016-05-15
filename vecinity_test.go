@@ -17,4 +17,12 @@ func TestVecinity(t *testing.T) {
 	if l := len(v); l < 8 {
 		t.Fail()
 	}
+	v = i.getVecinity(0, 0)
+	if len(v) != 3 {
+		t.Fail()
+	}
+	v = i.getVecinity(0, 1)
+	if len(v) != 5 {
+		t.Fail()
+	}
 }

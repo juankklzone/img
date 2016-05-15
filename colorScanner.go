@@ -2,31 +2,35 @@ package img
 
 import (
 	"fmt"
+	"image"
+	"image/color"
 	"sync"
 	"time"
 )
 
-//Scanner finds objects in a binary image.
-type Scanner struct {
+type RGBAScanner struct {
 	set *objectSet
-	bi  BinaryImage
+	img image.Image
+	ev  Evaluation
 }
 
-//NewScanner creates a scanner
-func NewScanner(i BinaryImage) *Scanner {
-	return &Scanner{set: newObjectset(), bi: i}
+type Evaluation func(c color.Color) bool
+
+func NewRGBAScanner(i image.Image, ev Evaluation) *RGBAScanner {
+	return &RGBAScanner{set: newObjectset(), img: i, ev: ev}
 }
 
 //SearchObjects count the objects found in the image
 //and save them for later use
-func (s *Scanner) SearchObjects() int {
-	rows := s.bi.Bounds().Max.X
+func (s *RGBAScanner) SearchObjects() int {
+	rows := s.img.Bounds().Max.X
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 	half := rows / 2
 	ini := time.Now()
-	go s.scanRows(wg, 0, half)
-	go s.scanRows(wg, half, rows)
+	maxy := s.img.Bounds().Max.Y
+	go s.scanRows(wg, 0, half, maxy)
+	go s.scanRows(wg, half, rows, maxy)
 	wg.Wait()
 	now := time.Now()
 	s.joinSegments(half)
@@ -35,13 +39,13 @@ func (s *Scanner) SearchObjects() int {
 	return len(s.set.objs)
 }
 
-func (s *Scanner) scanRows(wg *sync.WaitGroup, initial, final int) {
+func (s *RGBAScanner) scanRows(wg *sync.WaitGroup, initial, final, maxy int) {
 	defer wg.Done()
 	for i := initial; i < final; i++ {
 		//search for objects in last row
 		lastRow := s.set.objectsInLastRow(i)
 		//search for objects in this row
-		currentRowObjects := s.scanRow(i)
+		currentRowObjects := s.scanRow(i, maxy)
 		//if there's no rows in the last row, they are new objects
 		if len(lastRow.objs) == 0 {
 			s.set.append(currentRowObjects)
@@ -74,7 +78,7 @@ func (s *Scanner) scanRows(wg *sync.WaitGroup, initial, final int) {
 	}
 }
 
-func (s *Scanner) joinSegments(row int) {
+func (s *RGBAScanner) joinSegments(row int) {
 	lastRow := s.set.objectsInLastRow(row + 1)
 	if len(lastRow.objs) == 0 {
 		return
@@ -97,13 +101,13 @@ func (s *Scanner) joinSegments(row int) {
 
 }
 
-func (s *Scanner) scanRow(row int) *objectSet {
+func (s *RGBAScanner) scanRow(row, maxy int) *objectSet {
 	os := newObjectset()
 	currentObj := newObject()
 	objInProgress := false
 	id := 0
-	for y := range s.bi[row] {
-		if s.bi[row][y] {
+	for y := 0; y < maxy; y++ {
+		if s.ev(s.img.At(row, y)) {
 			currentObj.append(row, y)
 			objInProgress = true
 		} else if objInProgress {
@@ -122,14 +126,14 @@ func (s *Scanner) scanRow(row int) *objectSet {
 }
 
 //Filter discarts from the object set, those which size is less than minSz
-func (s *Scanner) Filter(minSz int) int {
+func (s *RGBAScanner) Filter(minSz int) int {
 	s.set = s.set.filter(minSz)
 	return len(s.set.objs)
 }
 
-//DrawObjects draw each object found in a random color inside ci
-func (s *Scanner) DrawObjects() (ci ColorImage) {
-	ci = NewColorFromImage(s.bi.Bounds())
-	s.set.draw(ci)
+//DrawObjects draw each object found in a specified color inside ci
+func (s *RGBAScanner) DrawObjects(c color.Color) (ci ColorImage) {
+	ci = NewColorFromImage(s.img.Bounds())
+	s.set.drawWithColor(ci, c)
 	return
 }

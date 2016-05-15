@@ -3,6 +3,7 @@ package img
 import (
 	"bytes"
 	"fmt"
+	"image/color"
 	"image/draw"
 	"sync"
 )
@@ -107,6 +108,16 @@ func (os *objectSet) draw(img draw.Image) {
 	idx := 0
 	for _, o := range os.objs {
 		o.draw(img, colors[idx])
+		idx++
+	}
+}
+
+func (os *objectSet) drawWithColor(img draw.Image, color color.Color) {
+	os.mtx.RLock()
+	defer os.mtx.RUnlock()
+	idx := 0
+	for _, o := range os.objs {
+		o.draw(img, color)
 		idx++
 	}
 }
