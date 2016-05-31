@@ -2,8 +2,9 @@ package canny
 
 import (
 	"image"
-	"img"
 	"math"
+
+	"github.com/juankklzone/img"
 )
 
 const (
