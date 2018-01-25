@@ -1,13 +1,13 @@
 # Img
 Package img provides basic image manipulation for RGBA and Grayscale images in Golang.  
-![Travis](https://travis-ci.org/juankklzone/img.svg?branch=master)  ![Go Report Card](https://goreportcard.com/badge/github.com/juankklzone/img)
+![Travis](https://travis-ci.org/thewraven/img.svg?branch=master)  ![Go Report Card](https://goreportcard.com/badge/github.com/thewraven/img)
 
 ![Gophers](examples/gophers.jpg)
 
 ## Install
 Assuming you have a go installation up and running:
 
-> go get github.com/juankklzone/img
+> go get github.com/thewraven/img
 
 ## Quickstart
 
@@ -16,7 +16,7 @@ package main
 
 import (
     "image/jpeg"
-    "github.com/juankklzone/img"
+    "github.com/thewraven/img"
     "os"
 )
 
@@ -53,7 +53,7 @@ func main() {
 ![(cc) Peter Harrison](examples/result.jpg "(cc) Peter Harrison")
 
 ## Documentation
-See [Godoc](https://godoc.org/github.com/juankklzone/img)
+See [Godoc](https://godoc.org/github.com/thewraven/img)
 
 ## License
 This project is licenced under the [GPLv3 License](LICENSE)

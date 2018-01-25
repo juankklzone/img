@@ -4,7 +4,7 @@ import (
 	"image"
 	"math"
 
-	"github.com/juankklzone/img"
+	"github.com/thewraven/img"
 )
 
 const (

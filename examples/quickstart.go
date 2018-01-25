@@ -4,7 +4,7 @@ import (
 	"image/jpeg"
 	"os"
 
-	"github.com/juankklzone/img"
+	"github.com/thewraven/img"
 )
 
 func main() {
